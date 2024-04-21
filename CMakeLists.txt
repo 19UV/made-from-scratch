@@ -8,6 +8,8 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(FILES ${FILES}
+	src/util/vector.c
+
 	src/win32/window.c
 	src/win32/renderers/opengl33.c
 
