@@ -1,7 +1,6 @@
 #include "win32/window.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <assert.h>
@@ -100,6 +99,8 @@ bool create_win32_window(Win32Window* window, HINSTANCE instance, const char* ti
 	if (created_window_class) {
 		if (!UnregisterClassA(window_class_name, instance)) {
 			fputs("[ERROR] Failed to unregister win32 window class.\n", stderr);
+		} else {
+			window_class_name = NULL;
 		}
 	}
 

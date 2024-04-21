@@ -9,6 +9,9 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(FILES ${FILES}
 	src/win32/window.c
+	src/win32/renderers/opengl33.c
+
+	src/opengl/gl.c
 
 	src/win32/entry.c
 )
