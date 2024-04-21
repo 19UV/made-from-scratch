@@ -65,7 +65,7 @@ static bool load_opengl32(void) {
 		fputs("[ERROR] Failed to load wgl function '" #name "'.\n", stderr); \
 		goto load_wgl_function_failed; \
 	}
-		
+
 		LOAD_WGL_FUNCTION(wglCreateContext, PFNWGLCREATECONTEXTPROC);
 		LOAD_WGL_FUNCTION(wglDeleteContext, PFNWGLDELETECONTEXTPROC);
 		LOAD_WGL_FUNCTION(wglMakeCurrent, PFNWGLMAKECURRENTPROC);
@@ -101,7 +101,7 @@ static void load_wgl_extensions(void) {
 		fputs("[WARN] Failed to load wgl function '" #name "' from '" #extension "'.\n", stderr); \
 	}
 
-#ifndef NDEBUG
+#if 0
 			fprintf(stderr, "[INFO] WGL Extensions: %s\n", extensions);
 #endif
 
@@ -235,14 +235,19 @@ bool create_win32_opengl33_renderer(Win32OpenGL33Renderer* renderer, Win32Window
 						if (opengl_context != NULL) {
 							if (wglMakeCurrent(device_context, opengl_context)) {
 								if (load_opengl_functions()) {
+#ifndef NDEBUG
+									fprintf(stderr, "[INFO] Driver Vendor:   %s\n", glGetString(GL_VENDOR));
+									fprintf(stderr, "[INFO] Physical Device: %s\n", glGetString(GL_RENDERER));
+									fprintf(stderr, "[INFO] OpenGL Version:  %s\n", glGetString(GL_VERSION));
+#endif
 									renderer->window_handle = window->handle;
 									renderer->device_context = device_context;
 									renderer->opengl_context = opengl_context;
+
+									return true;
 								} else {
 									fputs("[ERROR] Failed to load opengl functions.\n", stderr);
 								}
-
-								return true;
 							} else {
 								fputs("[ERROR] Failed to bind opengl context.\n", stderr);
 							}

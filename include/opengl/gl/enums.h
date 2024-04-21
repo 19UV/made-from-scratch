@@ -1,7 +1,9 @@
 #ifndef INCLUDED_OPENGL_GL_ENUMS_H
 #define INCLUDED_OPENGL_GL_ENUMS_H
 
-#define GL_VERSION 0x1f02
+#define GL_VENDOR   0x1f00
+#define GL_RENDERER 0x1f01
+#define GL_VERSION  0x1f02
 
 #endif /* INCLUDED_OPENGL_GL_ENUMS_H */
 

@@ -20,11 +20,6 @@ int main(int argc, const char* argv[]) {
 			Win32OpenGL33Renderer renderer;
 
 			if (create_win32_opengl33_renderer(&renderer, &window)) {
-				printf("Window: %p\n", renderer.window_handle);
-				printf("Device Context: %p\n", renderer.device_context);
-				printf("OpenGL Context: %p\n", renderer.opengl_context);
-				printf("Version: %s\n", glGetString(GL_VERSION));
-
 				ShowWindow(window.handle, 1);
 
 				while (!window.should_close) {
