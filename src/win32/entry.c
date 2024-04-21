@@ -22,12 +22,32 @@ int main(int argc, const char* argv[]) {
 			if (create_win32_opengl33_renderer(&renderer, &window)) {
 				ShowWindow(window.handle, 1);
 
+				GLfloat color = 0.0f;
+				GLfloat delta = 0.05f;
+
 				while (!window.should_close) {
+					glClearColor(color, color * (1.0f - color), 1.0f - color, 1.0f);
+					glClear(GL_COLOR_BUFFER_BIT);
+
 					win32_window_poll_events(&window);
 
-					puts("Frame");
+					color += delta;
+					if (color < 0.0f || color > 1.0f) {
+						delta = -delta;
 
+						color += delta;
+					}
+
+					if (!SwapBuffers(renderer.device_context)) {
+						fputs("[ERROR] Failed to swap buffers.\n", stderr);
+
+						window.should_close = true;
+					}
+
+#ifndef NDEBUG
+					puts("Frame");
 					Sleep(100);
+#endif
 				}
 
 				destroy_win32_opengl33_renderer(&renderer);

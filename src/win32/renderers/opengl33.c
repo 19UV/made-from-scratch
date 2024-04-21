@@ -135,15 +135,41 @@ static bool check_opengl_version(const char* string, unsigned int major, unsigne
 	);
 }
 
-static bool load_opengl_functions(void) {
-	/* NOTE: Because glGetString is weird, and from opengl32.dll */
-	opengl_glGetString = (PFNGLGETSTRINGPROC) GetProcAddress(lib_opengl32, "glGetString");
-	if (opengl_glGetString == NULL) {
-		fputs("[ERROR] Failed to load opengl function 'glGetString'.\n", stderr);
-		return false;
+static void* load_opengl_function(const char* name) {
+	void* result = NULL;
+
+	if (lib_opengl32 != NULL) {
+		if (wglGetProcAddress != NULL) {
+			result = wglGetProcAddress(name);
+		}
+
+		if (result == NULL) {
+			result = GetProcAddress(lib_opengl32, name);
+		}
 	}
 
-	return true;
+	return result;
+}
+
+static bool load_opengl_functions(void) {
+	bool success = true;
+
+#define LOAD_OPENGL_FUNCTION(name, type) \
+	opengl_##name = (type) load_opengl_function(#name); \
+	if (opengl_##name == NULL) { \
+		fputs("[ERROR] Failed to load opengl function '" #name "'.\n", stderr); \
+		success = false; \
+	}
+
+	LOAD_OPENGL_FUNCTION(glGetString, PFNGLGETSTRINGPROC);
+	LOAD_OPENGL_FUNCTION(glGetError, PFNGLGETERRORPROC);
+
+	LOAD_OPENGL_FUNCTION(glClearColor, PFNGLCLEARCOLORPROC);
+	LOAD_OPENGL_FUNCTION(glClear, PFNGLCLEARPROC);
+
+#undef LOAD_OPENGL_FUNCTION
+
+	return success;
 }
 
 bool create_win32_opengl33_renderer(Win32OpenGL33Renderer* renderer, Win32Window* window) {
